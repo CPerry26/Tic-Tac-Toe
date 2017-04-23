@@ -1,5 +1,6 @@
 #pragma once
 
+#include "stdafx.h"
 #include "TicTacToeGame.h"
 #include <string>
 #include <iostream>
@@ -33,7 +34,7 @@ void TicTacToeGame::check_for_win() {
 			// just set game over and return.
 			if (current_win_check == true) {
 				is_game_over = true;
-				return;
+				break;
 			}
 		}
 	}
@@ -52,35 +53,33 @@ bool TicTacToeGame::is_game_won() {
 }
 
 void TicTacToeGame::move(int x, int y) {
-	bool is_game_over = is_game_won();
-	
-	if (!is_game_over) {
-		if (current_turn == 1) {
-			tic_tac_toe_game[x][y] = 'X';
-			current_turn = 2;
-		}
-		else {
-			tic_tac_toe_game[x][y] = 'O';
-			current_turn = 1;
+	if (current_turn == 1) {
+		tic_tac_toe_game[x][y] = 'X';
+		current_turn = 2;
+	}
+	else {
+		tic_tac_toe_game[x][y] = 'O';
+		current_turn = 1;
+	}
+
+	check_for_win();
+	bool current_game_state = is_game_won();
+	if (current_game_state == false) {
+		bool is_game_tied = check_for_fail();
+
+		if (is_game_tied) {
+			is_game_over = true;
+			game_over(0);
+			return;
 		}
 
-		check_for_win();
-		bool current_game_state = is_game_won();
-		if (!current_game_state) {
-			bool is_game_tied = check_for_fail();
-
-			if (is_game_tied) {
-				is_game_over = true;
-				std::cout << "Game is tied!\n";
-				return;
-			}
-		}
 		print_current_game_state();
 	}
 	else {
 		// Game is over. Report winner.
 		game_over(winning_player);
 	}
+
 }
 
 /*
@@ -150,7 +149,7 @@ bool TicTacToeGame::is_valid_move(int x, int y) {
 	if (x > 2 || y > 2 || x < 0 || y < 0) {
 		valid_move = false;
 	}
-	else if (tic_tac_toe_game[x][y] != 'e') {
+	else if (tic_tac_toe_game[x][y] != '\0') {
 		valid_move = false;
 	}
 
@@ -179,7 +178,13 @@ void TicTacToeGame::reset() {
 * Returns: None
 */
 void TicTacToeGame::game_over(int winning_player_id) {
-	std::cout << "*** GAME OVER ***\nPlayer " << winning_player_id << " wins!\n";
+	if (winning_player_id == 0) {
+		// Game is tied.
+		std::cout << "*** GAME OVER ***\nGame is tied, no winner!\n";
+	}
+	else {
+		std::cout << "*** GAME OVER ***\nPlayer " << winning_player_id << " wins!\n";
+	}
 }
 
 /*
@@ -212,6 +217,11 @@ bool TicTacToeGame::check_for_fail() {
 *	=> bool won - true if player won, false otherwise.
 */
 bool TicTacToeGame::check_for_win_helper(char current_char, int x, int y) {
+	if (current_char == '\0') {
+		// We're checking a null char, meaning no move yet.
+		return false;
+	}
+
 	if (x == 0) {
 		if (y == 0) {
 			// X = 0, Y = 0
