@@ -1,5 +1,5 @@
-// Tic_Tac_Toe_Game.cpp : This source files defines the actual game loop.
-// All logic will be defined else where and used here.
+// main.cpp : This source files defines the actual game loop.
+// All logic is defined in TicTacToeGame.cpp and used here.
 // Author: Cody Perry (CPerry26)
 
 #include "stdafx.h"
@@ -7,12 +7,22 @@
 #include <string>
 #include <iostream>
 
-
+/*
+* This function prints the intro to the game.
+* Arugments: None
+* Returns: None
+*/
 void print_intro() {
 	std::cout << "Welcome to a Tic-Tac-Toe console game!\n";
 	std::cout << "Author: Cody Perry (CPerry26)\n\n";
 }
 
+/*
+* This function actually plays the game. It sets up the game instance,
+* as well as handles moves and necessary error logic.
+* Arguments: None
+* Returns: None
+*/
 void play_game() {
 	std::cout << "How many players? (Currently only supports 2 player) ";
 	std::string response = "";
@@ -66,10 +76,13 @@ bool ask_to_play_again() {
 	return response[0] == 'Y' || response[0] == 'y';
 }
 
+/*
+* This method is the actual main loop that's executed. All necessary functions are called from here.
+* Arguments: None
+* Returns: 0 for success
+*/
 int main()
 {
-	// Receive keyboard input from console to handle game steps
-	// Need to handle turns
 	// TODO: Implement GUI
 
 	bool play_again = false;
